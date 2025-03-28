@@ -90,13 +90,13 @@ void loop()
         analogWrite(PIN_OUT, steppedOutput); 
         Serial.print("Output: "); 
         Serial.print(steppedOutput); 
-        Serial.print("Input: "); 
-        Serial.print(throttleValue); 
+        Serial.print(" --- Input: "); 
+        Serial.println(throttleValue); 
         delay(1000); // Wait for 1 second
     }
     steppedOutput += 10;
   }
-  
+
   lastButtonState = currentState;
 
   delay(TICK_LENGTH_MS);
