@@ -1,11 +1,3 @@
-/**
- * Akom's smooth throttle using an Arduino (Pro Micro 5V or similar)
- * 
- * Takes care of:
- * - Eliminating jerky throttle response
- * - Eliminating deadband
- * - Speed Limit (adjustable by potentiometer)
- */
 
 // Input pin for throttle signal
 #define PIN_IN A3
@@ -16,34 +8,14 @@
 // ms delay between debugging prints
 #define PRINT_DELAY 100
 
-/**
- * All the ranges below can be determined by watching the serial console and twisting the throttle
- * Note that they will be slightly wrong if the controller supplies less than 5v to throttle.
- */
-
-/* fine tune the throttle range to eliminate deadband */
-// Normal range of throttle
-#define THROTTLE_MAP_IN_MIN 0
+#define THROTTLE_MAP_IN_MIN 995
 #define THROTTLE_MAP_IN_MAX 4095
 
-// Range we want to send to the controller
-// values from "no movement yet" to "max speed":
-//#define THROTTLE_MAP_OUT_MIN 390
-//#define THROTTLE_MAP_OUT_MAX 800
-
-#define THROTTLE_MAP_OUT_MIN 0
-#define THROTTLE_MAP_OUT_MAX 1024
-
-
-/* Jerkiness Mitigation */
-// how quickly to adjust output, larger values are slower
-//#define INCREASE_ERROR_FACTOR 170
-//#define DECREASE_ERROR_FACTOR 20
+#define THROTTLE_MAP_OUT_MIN 90
+#define THROTTLE_MAP_OUT_MAX 230
 
 #define INCREASE_ERROR_FACTOR 20
 #define DECREASE_ERROR_FACTOR 20
-
-
 // Basically delay between loops:
 #define TICK_LENGTH_MS 1
 
@@ -121,12 +93,18 @@ void loop() {
 
     } else {
         
-        //faccio uno sweep da 0 a 1024 e ritorno, per testare
+                  mapped = map(
+              outputValue,
+              THROTTLE_MAP_IN_MIN,
+              THROTTLE_MAP_IN_MAX,
+              THROTTLE_MAP_OUT_MIN,
+              THROTTLE_MAP_OUT_MAX / 1.5
+              );
 
 
     }
     
-    int pwmMapped = mapped / 4; // PWM is 0-254 while our values are 0-1023
+    int pwmMapped = mapped;
     analogWrite(
             PIN_OUT,
             pwmMapped

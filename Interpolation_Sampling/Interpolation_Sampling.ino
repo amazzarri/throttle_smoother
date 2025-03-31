@@ -80,21 +80,28 @@ void loop()
   //legge l'eventuale input dello switch
   bool currentState = digitalRead(switchPin);
 
+  if (steppedOutput <= 255){
    // Detect button press (falling edge)
   if ((lastButtonState == HIGH && currentState == LOW) || (lastButtonState == LOW && currentState == HIGH)) 
   {
     //manda output al motore per tot secondi, durante i quali la manetta va portata al livello desiderato e accettabile per quella velocità di rotazione del motore
     //ogni secondo deve stampare i valori di manetta e output, assieme a quelli del ciclo precedente, in modo da avere lo storico nel serial monitor
-    for (int i = 0; i < 20; i++) {  
+    for (int i = 0; i < 10; i++) {  
         throttleValue = analogRead(PIN_IN);
         analogWrite(PIN_OUT, steppedOutput); 
         Serial.print("Output: "); 
         Serial.print(steppedOutput); 
         Serial.print(" --- Input: "); 
-        Serial.println(throttleValue); 
-        delay(1000); // Wait for 1 second
+        Serial.print(throttleValue);
+        Serial.print(" --- Secs: ");
+        Serial.print(0.5 * i);
+        Serial.println(" of 5 ");
+      
+
+        delay(500); 
     }
     steppedOutput += 10;
+  }
   }
 
   lastButtonState = currentState;
